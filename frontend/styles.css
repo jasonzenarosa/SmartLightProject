@@ -1,0 +1,12 @@
+.log {
+    border: 1px solid black;
+    margin: 5px;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+p {
+    margin: 0px;
+    padding: 0px;
+}

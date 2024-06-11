@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import database.database_subroutines as subroutines
 import light_controls
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/create-log', methods=['post'])
 def add_new_alarm():
