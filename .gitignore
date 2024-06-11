@@ -1,2 +1,5 @@
 SmartLight.db
 __pycache__
+
+# Virtual Env
+flask_server
