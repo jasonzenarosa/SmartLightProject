@@ -10,7 +10,7 @@ cursor.execute('''
             CREATE TABLE IF NOT EXISTS Logs (
                log_id       INTEGER PRIMARY KEY AUTOINCREMENT,
                light_on     INTEGER NOT NULL,
-               datetime     TEXT NOT NULL,
+               timestamp    TEXT NOT NULL,
                method       TEXT NOT NULL
             )
 ''')
