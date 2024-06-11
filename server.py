@@ -1,45 +1,58 @@
-from flask import Flask
-from flask import request as flask_request
-import requests as HTTP_request
-import json
+from flask import Flask, request, jsonify
+import database.database_subroutines as subroutines
+import light_controls
 
 app = Flask(__name__)
-@app.route("/")
 
-def get_light_mac(light_num):
-    url = "https://developer-api.govee.com/v1/devices"
+@app.route('/create-log', methods=['post'])
+def add_new_alarm():
+    try:
+        light_on = bool(int(request.args.get('light-on')))
+        method = request.args.get('method')
+        subroutines.create_log(light_on, method)
 
-    headers = {
-        "accept": "application/json",
-        "Govee-API-Key": "061548ff-f891-4fa6-a32d-ea8b26e848b3"
-    }
+    except Exception as e:
+        return jsonify({'error': e}), 500
+    
+    return jsonify({'message': 'log added successfully'}), 200
 
-    response = HTTP_request.get(url, headers=headers)
-    response_dict = json.loads(response.text)
-    return response_dict['data']['devices'][light_num-1]['device']
+@app.route('/logs', methods=['get'])
+def retrieve_all_logs():
+    try:
+        logs = subroutines.get_all_logs()
 
-def turn_on_light(light_mac, req_state):
-    url = "https://developer-api.govee.com/v1/devices/control"
+    except Exception as e:
+        return jsonify({'error': e}), 500
+    
+    return jsonify({'result': logs}), 200
 
-    payload = {
-        "model": "H6008",
-        "cmd": {
-            "value": f"{req_state}",
-            "name": "turn"
-        },
-        "device": f"{light_mac}"
-    }
-    headers = {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "Govee-API-Key": "061548ff-f891-4fa6-a32d-ea8b26e848b3"
-    }
+@app.route('/lights-on', methods=['get'])
+def lights_on():
+    try:
+        l1mac = light_controls.get_light_mac(1)
+        l2mac = light_controls.get_light_mac(2)
 
-    return HTTP_request.put(url, json=payload, headers=headers)
+        light_controls.control_light(l1mac, light_controls.ON)
+        light_controls.control_light(l2mac, light_controls.ON)
+    
+    except Exception as e:
+        return jsonify({'error': e}), 500
+    
+    return jsonify({'message': 'lights turned on successfully'}), 200
 
-def hello():
-    light_1_mac = get_light_mac(1);
-    light_2_mac = get_light_mac(2);
+@app.route('/lights-off', methods=['get'])
+def lights_off():
+    try:
+        l1mac = light_controls.get_light_mac(1)
+        l2mac = light_controls.get_light_mac(2)
 
+        light_controls.control_light(l1mac, light_controls.OFF)
+        light_controls.control_light(l2mac, light_controls.OFF)
+    
+    except Exception as e:
+        return jsonify({'error': e}), 500
+    
+    return jsonify({'message': 'lights turned on successfully'}), 200
 
-    return "We received value: "+ str(flask_request.args.get("light"))
+if __name__ == "__main__":
+    app.run()
