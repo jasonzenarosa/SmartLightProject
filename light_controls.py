@@ -8,7 +8,7 @@ def control_light(light_mac, req_state):
     url = "https://developer-api.govee.com/v1/devices/control"
 
     payload = {
-        "model": "H6008",
+        "model": "YOUR_MODEL",
         "cmd": {
             "value": f"{req_state}",
             "name": "turn"
