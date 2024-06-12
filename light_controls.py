@@ -18,7 +18,7 @@ def control_light(light_mac, req_state):
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "Govee-API-Key": "061548ff-f891-4fa6-a32d-ea8b26e848b3"
+        "Govee-API-Key": "YOUR_GOVEE_API_KEY"
     }
 
     return HTTP_request.put(url, json=payload, headers=headers)
@@ -28,7 +28,7 @@ def get_light_mac(light_num):
 
     headers = {
         "accept": "application/json",
-        "Govee-API-Key": "061548ff-f891-4fa6-a32d-ea8b26e848b3"
+        "Govee-API-Key": "YOUR_GOVEE_API_KEY"
     }
 
     response = HTTP_request.get(url, headers=headers)
